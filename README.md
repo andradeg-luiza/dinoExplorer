@@ -1,97 +1,277 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# DinoExplorer: Chronicles of the Wild
 
-# Getting Started
+## 1. Overview
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+**DinoExplorer: Chronicles of the Wild** is a mobile scientific-adventure game where players explore prehistoric biomes, discover real dinosaur species, and complete a living scientific encyclopedia.
 
-## Step 1: Start Metro
+The MVP focuses on a simple but polished exploration loop, online connectivity from day one, and a scalable architecture ready for future expansion.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Players will:
+- Create their explorer character  
+- Travel to a prehistoric biome  
+- Encounter real dinosaur species  
+- Use the **Enchantment** ability to calm and study creatures  
+- Collect **Scientific Cards**  
+- Progress toward completing the **Primeval Encyclopedia**
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+The game blends entertainment with real paleontological knowledge.
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
-```
+## 2. Gameplay (MVP Scope)
 
-## Step 2: Build and run your app
+The MVP includes:
+- Character creation (basic customization)  
+- One initial biome (**Jurassic Forest**)  
+- 1–3 dinosaur species available for encounters  
+- Basic **Enchantment** mechanic *(calm → observe → register)*  
+- **Scientific Cards** system  
+- Online backend for:
+  - Player profile  
+  - Encyclopedia progress  
+  - Species data  
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Simple Expedition Loop:
+1. Receive a species card  
+2. Travel to biome  
+3. Encounter dinosaur  
+4. Enchant and register  
+5. Update encyclopedia  
 
-### Android
+> No base building, no climate events, no advanced systems yet.
 
-```sh
-# Using npm
+---
+
+## 3. Technology Stack
+
+### Mobile
+- React Native (CLI)  
+- TypeScript  
+- React Navigation (Native Stack)  
+- Clean Architecture (strict)  
+- Axios (API client)  
+- Zustand or Jotai (lightweight state management)  
+- MMKV (local cache)  
+
+### Backend
+- Node.js + TypeScript  
+- Express.js (REST API)  
+- PostgreSQL  
+- Prisma ORM  
+- Swagger / OpenAPI documentation  
+- API versioning (v1)  
+
+### DevOps
+- GitHub Actions (CI)  
+- Jest (tests)  
+- ESLint + Prettier  
+- Conventional Commits  
+
+---
+
+## 4. Architecture — Clean Architecture
+
+### Presentation Layer
+- Screens  
+- Components  
+- Navigation  
+- Hooks  
+- ViewModels / Controllers  
+
+### Domain Layer
+- Entities  
+- Value Objects  
+- Use Cases  
+- Repository Interfaces  
+
+### Data Layer
+- API clients  
+- DTOs  
+- Mappers  
+- Repositories (implementing domain interfaces)  
+- Local cache (MMKV)  
+
+### Infra Layer (Backend)
+- Routes  
+- Controllers  
+- Services  
+- Repositories  
+- Database models  
+
+---
+
+## 5. Folder Structure (Mobile)
+
+```text
+src
+├─ presentation
+│  ├─ screens
+│  ├─ components
+│  ├─ navigation
+│  ├─ viewmodels
+│  └─ hooks
+├─ domain
+│  ├─ entities
+│  ├─ valueObjects
+│  ├─ usecases
+│  └─ repositories
+├─ data
+│  ├─ api
+│  ├─ datasources
+│  ├─ repositories
+│  ├─ mappers
+│  ├─ dto
+│  └─ cache
+├─ infra
+│  ├─ storage
+│  └─ config
+└─ app
+   ├─ theme
+   ├─ utils
+   └─ types
+````
+
+---
+
+## 6. Online-First Strategy (MVP)
+
+Since the MVP is online from the beginning, the mobile app will:
+
+* Fetch species, biome, and card data from the backend
+* Store minimal local cache for:
+
+  * Last fetched species list
+  * Player profile
+  * Encyclopedia progress snapshot
+
+### Internet Required For:
+
+* Logging in (anonymous or guest)
+* Syncing progress
+* Fetching species data
+
+> Offline mode is not a priority for MVP.
+
+---
+
+## 7. Local Persistence Strategy
+
+Minimal local storage:
+
+* Player ID
+* Cached species list
+* Cached cards
+* Cached encyclopedia progress
+
+**Storage option for MVP:** MMKV
+
+---
+
+## 8. Database Model (High-Level)
+
+### Tables (PostgreSQL)
+
+#### players
+
+* id (uuid)
+* name
+* avatar_config (json)
+* created_at
+
+#### species
+
+* id (uuid)
+* name
+* period
+* diet
+* biome
+* danger_level
+* rarity
+* description
+* image_url
+* sound_url
+
+#### cards
+
+* id (uuid)
+* species_id (fk)
+* scientific_data (json)
+* created_at
+
+#### player_cards
+
+* id (uuid)
+* player_id (fk)
+* card_id (fk)
+* discovered_at
+
+#### biomes
+
+* id (uuid)
+* name
+* description
+* climate
+
+---
+
+## 9. API Overview (High-Level)
+
+**Base URL:** `/api/v1`
+
+### Player
+
+* `POST /players` — create player
+* `GET /players/{id}` — get player profile
+
+### Species
+
+* `GET /species` — list species
+* `GET /species/{id}` — species details
+
+### Cards
+
+* `POST /players/{id}/cards/{speciesId}` — register discovered species
+* `GET /players/{id}/cards` — list player cards
+
+### Biomes
+
+* `GET /biomes` — list biomes
+* `GET /biomes/{id}` — biome details
+
+---
+
+## 10. Running the Project Locally
+
+### Mobile
+
+```bash
+npm install
+npx pod-install
 npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Backend
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```bash
+npm install
+npx prisma migrate dev
+npm run dev
+```
 
-## Step 3: Modify your app
+---
 
-Now that you have successfully run the app, let's make changes!
+## 11. Future Evolution
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+* Multiple biomes
+* Dynamic weather events
+* Advanced Enchantment system
+* Base building (camp, lab, care area)
+* Offline-first mode
+* Filhotes e cuidados
+* Narrative quests
+* Cosmetics and monetization
+* Multiplayer expeditions
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```
+```
