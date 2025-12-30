@@ -36,11 +36,11 @@ export default function LandingScreen() {
         />
 
         <TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
-          <Text style={styles.primaryButtonText}>Entrar no Parque</Text>
+          <Text style={styles.primaryButtonText}>Entrar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.secondaryButton} onPress={() => {}}>
-          <Text style={styles.secondaryButtonText}>Sobre o Projeto</Text>
+          <Text style={styles.secondaryButtonText}>Saiba mais</Text>
         </TouchableOpacity>
 
       </Animated.View>
